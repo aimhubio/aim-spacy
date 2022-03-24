@@ -1,7 +1,8 @@
 from PIL import Image
 from spacy import displacy
 from typing import List, NoReturn
-from aim_utils import svg_to_png, html_to_img
+from aim_spacy.utils import svg_to_png, html_to_img
+
 
 class AimDisplacy:
     def __init__(self, size = (600,200)):

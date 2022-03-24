@@ -1,5 +1,5 @@
 from reportlab.graphics import renderPDF, renderPM
-from handler import Handler
+from aim_spacy.handler import Handler
 from lxml import etree
 from PIL import Image
 import os
@@ -25,4 +25,3 @@ def html_to_img(html_str: str = '', file_name: str = "random.png", size = (600,2
         os.remove(file_name)
 
     return img
-

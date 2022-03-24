@@ -1,8 +1,8 @@
 from html2image.html2image import Html2Image
 from svglib.svglib import SvgRenderer
 from html2image import Html2Image
-from displacy_wrapper import AimDisplacy
-from handler import Handler
+from aim_spacy.displacy_wrapper import AimDisplacy
+from aim_spacy.handler import Handler
 from spacy import displacy
 from typing import List
 from tqdm import tqdm
@@ -11,13 +11,13 @@ import spacy
 import aim
 
 
-def load_data(data_path:str = '') -> List:
+def load_data(data_path: str = '') -> List:
    data = []
    with open(args.data_path) as f:
       for line in f.readlines():
          data.append(line.strip())
-
    return data
+
 
 if __name__ == '__main__':
 
