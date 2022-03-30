@@ -13,7 +13,7 @@ with open(version_file) as vf:
 here = os.path.abspath(os.path.dirname(__file__))
 
 # Package meta-data
-NAME = 'aim_spacy'
+NAME = 'aim-spacy'
 DESCRIPTION = 'Aim-spaCy integration'
 LONG_DESCRIPTION = DESCRIPTION
 VERSION = __version__
@@ -38,6 +38,7 @@ class UploadCommand(Command):
     """Support setup.py upload."""
 
     description = 'Build and publish the package.'
+    user_options = []
 
     @staticmethod
     def status(s):
@@ -57,13 +58,10 @@ class UploadCommand(Command):
         except OSError:
             pass
 
-        self.status('Cleaning build directory')
-        os.system('{} setup.py clean --all'.format(sys.executable))
-
         self.status('Building Source and Wheel (universal) distribution…')
-        os.system(f'{sys.executable} setup.py sdist bdist_wheel --universal')
+        os.system('{0} setup.py sdist bdist_wheel --universal'.format(sys.executable))
 
-        # self.status('Uploading the package to PyPI via Twine…')
+        self.status('Uploading the package to PyPI via Twine…')
         os.system('twine upload dist/*')
 
         self.status('Pushing git tags…')
