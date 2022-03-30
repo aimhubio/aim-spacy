@@ -5,7 +5,7 @@ from aim_spacy.utils import svg_to_png, html_to_img
 
 
 class AimDisplacy:
-    def __init__(self, size = (600,200)):
+    def __init__(self, size=(600, 200)):
         self.displacy_module = displacy
         self.image_size = size
 
@@ -21,5 +21,3 @@ class AimDisplacy:
 
     def serve(self, docs, **kwargs) -> NoReturn:
         self.displacy_module.serve(docs=docs, **kwargs)
-        
-

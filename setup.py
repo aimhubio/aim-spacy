@@ -1,6 +1,6 @@
 import sys
 import os
-import io
+from shutil import rmtree
 from setuptools import find_packages, setup, Command, Extension
 
 version_file = 'aim_spacy/VERSION'
@@ -33,6 +33,46 @@ REQUIRED = [
     'reportlab',
 ]
 
+
+class UploadCommand(Command):
+    """Support setup.py upload."""
+
+    description = 'Build and publish the package.'
+
+    @staticmethod
+    def status(s):
+        """Prints things in bold."""
+        print('\033[1m{0}\033[0m'.format(s))
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        try:
+            self.status('Removing previous builds…')
+            rmtree(os.path.join(here, 'dist'))
+        except OSError:
+            pass
+
+        self.status('Cleaning build directory')
+        os.system('{} setup.py clean --all'.format(sys.executable))
+
+        self.status('Building Source and Wheel (universal) distribution…')
+        os.system(f'{sys.executable} setup.py sdist bdist_wheel --universal')
+
+        # self.status('Uploading the package to PyPI via Twine…')
+        os.system('twine upload dist/*')
+
+        self.status('Pushing git tags…')
+        os.system('git tag v{0}'.format(VERSION))
+        os.system('git push --tags')
+
+        sys.exit()
+
+
 setup(
     name=NAME,
     version=VERSION,
@@ -52,4 +92,7 @@ setup(
         'Programming Language :: Python :: 3.10',
         'Programming Language :: Python :: Implementation :: PyPy'
     ],
+    cmdclass={
+        'upload': UploadCommand
+    },
 )

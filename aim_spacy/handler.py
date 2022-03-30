@@ -8,7 +8,6 @@ class Handler:
             Handler()
         return Handler.__instance
 
-
     def set_attr(self, **kwargs):
         print(type(kwargs))
         print('html_handeler' in kwargs)
