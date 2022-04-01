@@ -1,28 +1,29 @@
-from reportlab.graphics import renderPDF, renderPM
-from aim_spacy.handler import Handler
-from lxml import etree
-from PIL import Image
 import os
-import io
+
+from reportlab.graphics import renderPM
+from PIL import Image
+from lxml import etree
+
+from aim_spacy.handler import Handler
 
 
 def svg_to_png(svg_str: str = '') -> Image:
-    svg_handeler = Handler.getInstance().svg_handeler
+    svg_handler = Handler().svg_handler
     root = etree.fromstring(svg_str)
-    drawing = svg_handeler.render(root)
-    png_PIL = renderPM.drawToPILP(drawing)
-    return png_PIL
+    drawing = svg_handler.render(root)
+    pil_image = renderPM.drawToPILP(drawing)
+    return pil_image
 
 
 def html_to_img(html_str: str = '',
                 file_name: str = 'random.png',
                 size=(600, 200)) -> Image:
-    html_handeler = Handler.getInstance().html_handeler
-    paths = html_handeler.screenshot(html_str=html_str,
-                                     save_as=file_name,
-                                     size=size)
+    html_handler = Handler().html_handler
+    paths = html_handler.screenshot(html_str=html_str,
+                                    save_as=file_name,
+                                    size=size)
     
-    for path in paths:
+    for _ in paths:
         img = Image.open(file_name)
         os.remove(file_name)
 
