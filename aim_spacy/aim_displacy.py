@@ -17,7 +17,10 @@ class AimDisplaCy(Image):
         if style == 'dep':
             img = svg_to_png(html)
         else:
-            img = html_to_img(html, size=(600, 200))
+            img = html_to_img(html, size=image_size)
+
+        if not img:
+            raise ValueError('docs is not passed properly or the given style is not supported')
 
         super().__init__(img, caption, format='png', quality=quality, optimize=optimize)
 
