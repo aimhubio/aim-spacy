@@ -17,7 +17,11 @@ def svg_to_png(svg_str: str = ''):
 
 def html_to_img(html_str: str = '', size: tuple = (600, 200)):
     with TemporaryDirectory() as temp_path:
-        html_handler = Handler().html_handler(output_path=temp_path)
+        html_handler = Handler().html_handler(
+            output_path=temp_path,
+            custom_flags=['--disable-gpu', '--log-level=0']
+        )
+        # TODO: disable headless browser logging
         file_name = 'sample.png'
         paths = html_handler.screenshot(html_str=html_str,
                                         save_as=file_name,
