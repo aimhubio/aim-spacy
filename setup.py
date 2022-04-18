@@ -93,4 +93,5 @@ setup(
     cmdclass={
         'upload': UploadCommand
     },
+    entry_points={'spacy_loggers':['spacy.AimLogger.v1 = aim_spacy.base_logger:aim_logger_v1']}
 )
