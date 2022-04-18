@@ -5,6 +5,8 @@ from PIL import Image
 from lxml import etree
 
 from aim_spacy.handler import Handler
+from spacy.tokens import DocBin
+from spacy import Language
 
 
 def svg_to_png(svg_str: str = ''):
@@ -18,18 +20,11 @@ def svg_to_png(svg_str: str = ''):
 def html_to_img(html_str: str = '', size: tuple = (600, 200)):
     flags = []
     with TemporaryDirectory() as temp_path:
-        flags.append("--disable-extensions")
-        flags.append("--disable-in-process-stack-traces")
-        flags.append("--disable-logging")
-        flags.append("--disable-dev-shm-usage")
-        # flags.append("--log-level=3")
-        flags.append("--output=/dev/null")
-        flags.append("--disable-gpu")
+        flags.append("--enable-logging=/dev/null")
         flags.append("--headless")
         flags.append("--no-sandbox")
         flags.append("--disable-logging")
-        # flags.append("--disable-software-rasterizer")
-
+        flags.append("--v=-3")
 
         html_handler = Handler().html_handler(
             output_path=temp_path,
@@ -40,9 +35,14 @@ def html_to_img(html_str: str = '', size: tuple = (600, 200)):
                                         save_as=file_name,
                                         size=size)
 
-        print(paths)
         for path in paths:
             img = Image.open(path)
             return img
 
     return None
+
+def docbin_to_doc(docbin_path: str = None, nlp: 'Language' = None):
+    docbin = DocBin()
+    data = docbin.from_disk(docbin_path)
+    docs = list(data.get_docs(nlp.vocab))
+    return docs

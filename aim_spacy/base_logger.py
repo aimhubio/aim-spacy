@@ -2,9 +2,12 @@ from typing import Dict, Any, Tuple, Union, Callable, List, Optional, IO
 import sys
 from weakref import finalize
 
-from spacy import util
 from spacy import Language
 from spacy.training.loggers import console_logger
+
+from aim_spacy import AimDisplaCy
+from aim_spacy.handler import Handler
+from aim_spacy.utils import docbin_to_doc
 
 try:
     import aim
@@ -15,31 +18,47 @@ except ImportError:
         'We cannot find the "aim" package on your system. Please make sure to install it.'
     )
 
-
-
-
 # entry point: spacy.AimLogger.v1
 def aim_logger_v1(
     repo: Optional[str] = '.',
     experiment_name: Optional[str] = None,
     run_hash: Optional[str] = None,
+    viz_path: Optional[str] = None,
+    model_log_interval: Optional[int] = None,
+    image_size: Optional[str] = "600,200",
+    experiment_type: Optional[str] = None,
 
 ):
     
     console = console_logger(progress_bar=False)
+
     # aim_run, console_log_step, console_finalize = setup_aim(experiment_name=experiment_name)
     def setup_aim(nlp: 'Language', stdout: IO = sys.stdout, stderr: IO = sys.stderr, experiment_name:str='') \
         -> Union[Run, Callable[[Dict[str, Any]], None], Callable[[], None]]:
+
+            nonlocal viz_path, model_log_interval, image_size, experiment_type
+
             config = nlp.config.interpolate()
 
             aim_run = Run(repo = repo, experiment=experiment_name, run_hash=run_hash)
             aim_run['config'] = config
 
+            if viz_path is not None:
+                image_size = [int(size.strip()) for size in image_size.split(',')]
+                aim_displacy = AimDisplaCy(image_size=image_size)
+
+                logging_handler = Handler()
+                logging_handler.data = docbin_to_doc(docbin_path=viz_path, nlp=nlp)
+
             console = console_logger(progress_bar=False)
             console_log_step, console_finalize = console(nlp, stdout, stderr)
 
             def aim_log_step(info: Optional[Dict[str, Any]]):
+
+                logging_handler = Handler()
+
                 console_log_step(info)
+
                 if info is not None:
                     epoch = info['epoch']
                     step = info['step']
@@ -56,6 +75,15 @@ def aim_logger_v1(
                         for score_name, loss_value in other_scores.items():
                             if not isinstance(loss_value, dict):
                                 aim_run.track(loss_value, name=loss_name, context={'type':f'other_scores_{score_name}'}, epoch=epoch, step=step)
+
+                    if model_log_interval is not None:
+                        if (info["step"] % model_log_interval == 0 and info["step"] != 0):
+                            for docs in logging_handler.data:
+                                if 'ner' in experiment_type:
+                                    aim_run.track(aim_displacy(docs, style='ent', caption=f'Entities for text at step: {info["step"]}'), name='Parsing', context={'type': 'ner'})
+                                elif 'dep' in experiment_type: 
+                                    aim_run.track(aim_displacy(docs, style='dep', caption=f'Dependecy for text at step: {info["step"]}'), name='Parsing', context={'type': 'dependency'})
+
 
 
             def aim_finalize():
