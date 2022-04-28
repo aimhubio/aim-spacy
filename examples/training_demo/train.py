@@ -4,6 +4,7 @@ from spacy.tokens import DocBin
 nlp = spacy.blank("en")
 training_data = [
   ("Tokyo Tower is 333m tall.", [(0, 11, "BUILDING")]),
+  ("Yerevan is  great city.", [(0, 7, "GPE")]),
 ]
 # the DocBin will store the example documents
 db = DocBin()

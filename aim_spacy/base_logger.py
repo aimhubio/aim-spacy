@@ -33,7 +33,7 @@ def aim_logger_v1(
     console = console_logger(progress_bar=False)
 
     # aim_run, console_log_step, console_finalize = setup_aim(experiment_name=experiment_name)
-    def setup_aim(nlp: 'Language', stdout: IO = sys.stdout, stderr: IO = sys.stderr, experiment_name:str='') \
+    def setup_aim(nlp: 'Language', stdout: IO = sys.stdout, stderr: IO = sys.stderr, experiment_name:str=experiment_name) \
         -> Union[Run, Callable[[Dict[str, Any]], None], Callable[[], None]]:
 
             nonlocal viz_path, model_log_interval, image_size, experiment_type
@@ -49,6 +49,7 @@ def aim_logger_v1(
 
                 logging_handler = Handler()
                 logging_handler.data = docbin_to_doc(docbin_path=viz_path, nlp=nlp)
+                print(logging_handler.data)
 
             console = console_logger(progress_bar=False)
             console_log_step, console_finalize = console(nlp, stdout, stderr)
@@ -78,12 +79,10 @@ def aim_logger_v1(
 
                     if model_log_interval is not None:
                         if (info["step"] % model_log_interval == 0 and info["step"] != 0):
-                            for docs in logging_handler.data:
-                                if 'ner' in experiment_type:
-                                    aim_run.track(aim_displacy(docs, style='ent', caption=f'Entities for text at step: {info["step"]}'), name='Parsing', context={'type': 'ner'})
-                                elif 'dep' in experiment_type: 
-                                    aim_run.track(aim_displacy(docs, style='dep', caption=f'Dependecy for text at step: {info["step"]}'), name='Parsing', context={'type': 'dependency'})
-
+                            if 'ner' in experiment_type:
+                                aim_run.track(aim_displacy(logging_handler.data, style='ent', caption=f'Entities for text at step: {info["step"]}'), step=step, epoch=epoch, name='Parsing', context={'type': 'ner'})
+                            elif 'dep' in experiment_type: 
+                                aim_run.track(aim_displacy(logging_handler.data, style='dep', caption=f'Dependecy for text at step: {info["step"]}'), step=step, epoch=epoch, name='Parsing', context={'type': 'dependency'})
 
 
             def aim_finalize():

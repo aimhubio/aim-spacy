@@ -7,23 +7,28 @@ from aim_spacy.utils import svg_to_png, html_to_img
 
 
 class AimDisplaCy:
-    def __init__(self, image_size=(1024, 768), **kwargs):
-        self.image_size = (600, 200)
+    def __init__(self, image_size=(200, 200), **kwargs):
+        self.image_size = image_size
 
 
     def __call__(self, docs, style, caption='', quality=90, optimize=False):
 
-        html = displacy.render(docs, jupyter=False, style=style, page=False)
+        image_list = []
 
-        if style == 'dep':
-            img = svg_to_png(html)
-        else:
-            img = html_to_img(html, size=self.image_size)
+        for doc in docs:
+            html = displacy.render(doc, jupyter=False, style=style, page=False)
 
-        if not img:
-            raise ValueError('docs is not passed properly or the given style is not supported')
+            if style == 'dep':
+                img = svg_to_png(html)
+            else:
+                img = html_to_img(html, size=self.image_size)
 
-        return Image(img, caption, format='png', quality=quality, optimize=optimize)
+            if not img:
+                raise ValueError('docs is not passed properly or the given style is not supported')
+
+            image_list.append(Image(img, caption, format='png', quality=quality, optimize=optimize))
+
+        return image_list
 
 
     def serve(self, **kwargs) -> NoReturn:
