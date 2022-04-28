@@ -2,18 +2,17 @@
   
 <br />
 
-<img src="https://user-images.githubusercontent.com/13848158/136364717-0939222c-55b6-44f0-ad32-d9ab749546e4.png" height="70" />
+# Aim-spaCy
 
 <br />
-<br />
 
-[![PyPI Package](https://img.shields.io/pypi/v/aim?color=yellow)](https://pypi.org/project/aim-spacy/)
-[![PyPI Downloads](https://img.shields.io/pypi/dw/aim?color=green)](https://pypi.org/project/aim-spacy/)
-[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/aim)](https://pypi.org/project/aim-spacy/)
-[![Issues](https://img.shields.io/github/issues/aimhubio/aim)](http://github.com/aimhubio/aim-spacy/issues)
+[![PyPI Package](https://img.shields.io/pypi/v/aim-spacy?color=yellow)](https://pypi.org/project/aim-spacy/)
+[![PyPI Downloads](https://img.shields.io/pypi/dw/aim-spacy?color=green)](https://pypi.org/project/aim-spacy/)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/aim-spacy)](https://pypi.org/project/aim-spacy/)
+[![Issues](https://img.shields.io/github/issues/aimhubio/aim-spacy)](http://github.com/aimhubio/aim-spacy/issues)
 [![License](https://img.shields.io/badge/License-Apache%202.0-orange.svg)](https://opensource.org/licenses/Apache-2.0)
 
-# Aim-spaCy integration
+
 
 The project contains the fundamental integration in between `Aim` and `spaCy`.
 
