@@ -12,25 +12,26 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-orange.svg)](https://opensource.org/licenses/Apache-2.0)
 
 
-
-The project contains the fundamental integration in between `Aim` and `spaCy`.
+Aim-spaCy is an Aim plugin for spaCy. Its mission is to help AI researchers compare their spaCy metadata dramatically faster at scale.
 
 ## About
+When running spaCy for training and inference a variety of metadata gets generated (hyperparams, metrics, visualizations etc). The runs/inferences need to be compared to do the next iterations quickly.
+Aim is the most advanced open-source self-hosted AI experiment / metadata comparison tool.
 
-Aim-spaCy helps to easily collect, store and explore training logs of spaCy, including:
+Aim-spaCy helps to easily collect, store and explore training logs for spaCy, including:
 - metrics
 - hyper-parameters
 - displaCy visualizations
 
-Find more about Aim at https://github.com/aimhubio/aim
+More about Aim: https://github.com/aimhubio/aim
 
-spacy: https://github.com/explosion/spaCy
+More about spaCy: https://github.com/explosion/spaCy
 
 ## Examples
 
-- A quick example on how to tracking metrics, hparams and displacy outputs with AimLogger
+- A quick example on how to track metrics, hparams and displaCy outputs with AimLogger
   - https://github.com/aimhubio/aim-spacy/tree/master/examples/training_demo 
-- Exampl of tracking displacy visualizations with AimDisplaCy
+- Example of tracking displaCy visualizations with AimDisplaCy
   - https://github.com/aimhubio/aim-spacy/tree/master/examples/image_tracking_demo
 
 
