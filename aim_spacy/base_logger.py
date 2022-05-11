@@ -44,7 +44,7 @@ def aim_logger_v1(
             aim_run['config'] = config
 
             if viz_path is not None:
-                image_size = [int(size.strip()) for size in image_size.split(',')]
+                image_size = tuple([int(size.strip()) for size in image_size.split(',')])
                 aim_displacy = AimDisplaCy(image_size=image_size)
 
                 logging_handler = Handler()
