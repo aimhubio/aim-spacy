@@ -49,6 +49,7 @@ if __name__ == '__main__':
     nlp = spacy.load(args.model_name)
     data = load_data(args.data_path)
 
+    aim_run['metadata'] = vars(args)
     aim_displacy = AimDisplaCy(image_size=(600, 200))
 
     for index, text in tqdm(enumerate(data), total=len(data)):
@@ -56,13 +57,13 @@ if __name__ == '__main__':
         
         if len(doc.ents) > 0:
             aim_run.track(
-                aim_displacy(doc, style='dep', caption=f'Dependecy for data: {index}'),
+                aim_displacy([doc], style='dep', caption=f'Dependecy for data: {index}'),
                 name='Parsing',
                 context={'type': 'dependency'}
             )
 
             aim_run.track(
-                aim_displacy(doc, style='ent', caption=f'Entity for data: {index}'),
+                aim_displacy([doc], style='ent', caption=f'Entity for data: {index}'),
                 name='Parsing',
                 context={'type': 'entity'}
             )
