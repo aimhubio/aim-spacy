@@ -12,7 +12,7 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-orange.svg)](https://opensource.org/licenses/Apache-2.0)
 
 
-Aim-spaCy is an Aim plugin for spaCy. Its mission is to help AI researchers compare their spaCy metadata dramatically faster at scale.
+[Aim-spaCy](https://aimstack.io/spacy) is an Aim plugin for spaCy. Its mission is to help AI researchers compare their spaCy metadata dramatically faster at scale.
 
 ## About
 When running spaCy for training and inference a variety of metadata gets generated (hyperparams, metrics, visualizations etc). The runs/inferences need to be compared to do the next iterations quickly.
