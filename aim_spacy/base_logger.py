@@ -2,7 +2,7 @@ from typing import Dict, Any, Tuple, Union, Callable, List, Optional, IO
 import sys
 from weakref import finalize
 
-from spacy import Language
+from spacy import Language, displacy
 from spacy.training.loggers import console_logger
 
 from aim_spacy import AimDisplaCy
@@ -27,6 +27,7 @@ def aim_logger_v1(
     model_log_interval: Optional[int] = None,
     image_size: Optional[str] = "600,200",
     experiment_type: Optional[str] = None,
+    options: Optional[dict] = {},
 
 ):
     
@@ -36,7 +37,7 @@ def aim_logger_v1(
     def setup_aim(nlp: 'Language', stdout: IO = sys.stdout, stderr: IO = sys.stderr, experiment_name:str=experiment_name) \
         -> Union[Run, Callable[[Dict[str, Any]], None], Callable[[], None]]:
 
-            nonlocal viz_path, model_log_interval, image_size, experiment_type
+            nonlocal viz_path, model_log_interval, image_size, experiment_type, options
 
             config = nlp.config.interpolate()
 
@@ -45,11 +46,10 @@ def aim_logger_v1(
 
             if viz_path is not None:
                 image_size = tuple([int(size.strip()) for size in image_size.split(',')])
-                aim_displacy = AimDisplaCy(image_size=image_size)
+                aim_displacy = AimDisplaCy(image_size=image_size, options=options)
 
                 logging_handler = Handler()
                 logging_handler.data = docbin_to_doc(docbin_path=viz_path, nlp=nlp)
-                print(logging_handler.data)
 
             console = console_logger(progress_bar=False)
             console_log_step, console_finalize = console(nlp, stdout, stderr)
@@ -79,10 +79,9 @@ def aim_logger_v1(
 
                     if model_log_interval is not None:
                         if (info["step"] % model_log_interval == 0 and info["step"] != 0):
-                            if 'ner' in experiment_type:
-                                aim_run.track(aim_displacy(logging_handler.data, style='ent', caption=f'Entities for text at step: {info["step"]}'), step=step, epoch=epoch, name='Parsing', context={'type': 'ner'})
-                            elif 'dep' in experiment_type: 
-                                aim_run.track(aim_displacy(logging_handler.data, style='dep', caption=f'Dependecy for text at step: {info["step"]}'), step=step, epoch=epoch, name='Parsing', context={'type': 'dependency'})
+
+                            displacy_input = dict(docs=logging_handler.data, style=experiment_type, caption=f'Visualization at step: {info["step"]}')                   
+                            aim_run.track(aim_displacy(**displacy_input), step=step, epoch=epoch, name='Parsing', context={'type': experiment_type})                           
 
 
             def aim_finalize():
