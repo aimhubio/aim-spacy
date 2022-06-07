@@ -9,7 +9,7 @@ from aim_spacy.utils import svg_to_png, html_to_img
 class AimDisplaCy:
     def __init__(self, image_size=(200, 200), **kwargs):
         self.image_size = image_size
-        self.options = kwargs['options']
+        self.options = kwargs
 
 
     def __call__(self, docs, style, caption='', quality=90, optimize=False):

@@ -46,7 +46,7 @@ def aim_logger_v1(
 
             if viz_path is not None:
                 image_size = tuple([int(size.strip()) for size in image_size.split(',')])
-                aim_displacy = AimDisplaCy(image_size=image_size, options=options)
+                aim_displacy = AimDisplaCy(image_size=image_size, **options)
 
                 logging_handler = Handler()
                 logging_handler.data = docbin_to_doc(docbin_path=viz_path, nlp=nlp)
