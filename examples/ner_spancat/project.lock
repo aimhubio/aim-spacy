@@ -1,0 +1,59 @@
+corpus:
+  cmd: python -m spacy run corpus
+  script:
+    - python -m spacy convert assets/nergrit_ner-grit/train_preprocess.txt --converter
+      iob --lang id corpus/ -n 10
+    - python -m spacy convert assets/nergrit_ner-grit/valid_preprocess.txt --converter
+      iob --lang id corpus/ -n 10
+    - mv corpus/train_preprocess.spacy corpus/train.spacy
+    - mv corpus/valid_preprocess.spacy corpus/dev.spacy
+    - python scripts/add_ents_to_spans_dict.py corpus/train.spacy id grit
+    - python scripts/add_ents_to_spans_dict.py corpus/dev.spacy id grit
+  deps:
+    - path: scripts/add_ents_to_spans_dict.py
+      md5: 1b5d6bca76bba04a08864dbbe60ad190
+    - path: assets/nergrit_ner-grit/train_preprocess.txt
+      md5: 86b008c1ef1ad3a747e0f8a483926fc3
+    - path: assets/nergrit_ner-grit/valid_preprocess.txt
+      md5: 3344298580b8f801e3e3941e12e1584f
+  outs:
+    - path: corpus/train.spacy
+      md5: 0bc58d27664e2b605ddddbc90555cfdc
+    - path: corpus/dev.spacy
+      md5: 0b4a737f290333873dcce824a4d46c48
+  spacy_version: 3.3.0
+  spacy_git_version: Unknown
+train:
+  cmd: python -m spacy run train
+  script:
+    - python -m spacy train configs/spancat.cfg -o training/ --gpu-id -1 --paths.train
+      corpus/train.spacy --paths.dev corpus/dev.spacy
+  deps:
+    - path: corpus/train.spacy
+      md5: 0bc58d27664e2b605ddddbc90555cfdc
+    - path: corpus/dev.spacy
+      md5: 0b4a737f290333873dcce824a4d46c48
+    - path: configs/spancat.cfg
+      md5: a82e497b0d2a36bd0363d5d50515d889
+  outs:
+    - path: training/model-best
+      md5: 7d91b8354508f5544aeb06e7d0b6087e
+  spacy_version: 3.3.0
+  spacy_git_version: Unknown
+evaluate:
+  cmd: python -m spacy run evaluate
+  script:
+    - python scripts/evaluate.py ./training/model-best ./corpus/dev.spacy --output
+      ./metrics/spancat.json --gpu-id -1 --spans-key grit
+  deps:
+    - path: training/model-best
+      md5: 7d91b8354508f5544aeb06e7d0b6087e
+    - path: corpus/dev.spacy
+      md5: 0b4a737f290333873dcce824a4d46c48
+    - path: scripts/evaluate.py
+      md5: 77a4ad004f590f4d038ee50ac62b0d2f
+  outs:
+    - path: metrics/spancat.json
+      md5: 68f56f21fc99b2b17f48d93b26f73e3a
+  spacy_version: 3.3.0
+  spacy_git_version: Unknown
