@@ -17,8 +17,10 @@ class AimDisplaCy:
         image_list = []
 
         self.options.update(dict(jupyter=False, style=style, page=False))
+        manual = self.options.pop('manual', None)
+        
         for doc in docs:
-            html = displacy.render(doc, jupyter=False, style=style, page=False, options=self.options)
+            html = displacy.render(doc, jupyter=False, style=style, page=False, manual=manual, options=self.options)
 
             if style == 'dep':
                 img = svg_to_png(html)
