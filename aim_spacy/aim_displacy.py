@@ -7,9 +7,10 @@ from aim_spacy.utils import svg_to_png, html_to_img
 
 
 class AimDisplaCy:
-    def __init__(self, image_size=(200, 200), **kwargs):
+    def __init__(self, image_size=(200, 200), manual=False, **kwargs):
         self.image_size = image_size
         self.options = kwargs
+        self.manual = manual
 
 
     def __call__(self, docs, style, caption='', quality=90, optimize=False):
@@ -17,10 +18,9 @@ class AimDisplaCy:
         image_list = []
 
         self.options.update(dict(jupyter=False, style=style, page=False))
-        manual = self.options.pop('manual', None)
         
         for doc in docs:
-            html = displacy.render(doc, jupyter=False, style=style, page=False, manual=manual, options=self.options)
+            html = displacy.render(doc, jupyter=False, style=style, page=False, manual=self.manual, options=self.options)
 
             if style == 'dep':
                 img = svg_to_png(html)
