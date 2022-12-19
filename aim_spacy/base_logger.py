@@ -75,13 +75,14 @@ def aim_logger_v1(
                     if isinstance(other_scores, dict):
                         for score_name, loss_value in other_scores.items():
                             if not isinstance(loss_value, dict):
-                                aim_run.track(loss_value, name=loss_name, context={'type':f'other_scores_{score_name}'}, epoch=epoch, step=step)
+                                if not score_name.endswith('_desc'): 
+                                    aim_run.track(loss_value, name=loss_name, context={'type':f'other_scores_{score_name}'}, epoch=epoch, step=step)
 
                     if model_log_interval is not None:
                         if (info["step"] % model_log_interval == 0 and info["step"] != 0):
-
-                            displacy_input = dict(docs=logging_handler.data, style=experiment_type, caption=f'Visualization at step: {info["step"]}')                   
-                            aim_run.track(aim_displacy(**displacy_input), step=step, epoch=epoch, name='Parsing', context={'type': experiment_type})                           
+                            if viz_path is not None:
+                                displacy_input = dict(docs=logging_handler.data, style=experiment_type, caption=f'Visualization at step: {info["step"]}')                   
+                                aim_run.track(aim_displacy(**displacy_input), step=step, epoch=epoch, name='Parsing', context={'type': experiment_type})                           
 
 
             def aim_finalize():
