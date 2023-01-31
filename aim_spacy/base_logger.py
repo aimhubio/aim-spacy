@@ -75,6 +75,7 @@ def aim_logger_v1(
                     if isinstance(other_scores, dict):
                         for score_name, loss_value in other_scores.items():
                             if not isinstance(loss_value, dict):
+                                # _desc is a special key for the description of the score which is a string
                                 if not score_name.endswith('_desc'): 
                                     aim_run.track(loss_value, name=loss_name, context={'type':f'other_scores_{score_name}'}, epoch=epoch, step=step)
 
