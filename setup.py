@@ -26,7 +26,7 @@ REQUIRED = [
     'html2image',
     'spacy',
     'tqdm',
-    'aim',
+    'aim < 4.0.0',
     'svglib',
     'lxml',
     'pillow',
